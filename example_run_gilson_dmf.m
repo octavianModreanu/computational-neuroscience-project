@@ -7,6 +7,8 @@
 
 clear; close all; clc;
 
+% DEMO COMMENT FOR GIT
+
 %% 1. Load DMF parameters
 p = dmf_get_params();
 
