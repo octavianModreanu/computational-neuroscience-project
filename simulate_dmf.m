@@ -1,4 +1,4 @@
-function [S_t, t] = simulate_dmf(C, w_EE, p, T, dt, S0, I_ext)
+function [S_t, t, u_t, r_t] = simulate_dmf(C, w_EE, p, T, dt, S0, I_ext)
 % SIMULATE_DMF  Integrates the DMF model (Gilson et al 2016) with additive 
 % white noise directly on dS/dt (Deco et al. 2013 formulation)
 %
@@ -24,13 +24,19 @@ if nargin < 7 || isempty(I_ext)
 end
 
 S_t = zeros(N, n_steps);
+u_t = zeros(N, n_steps);   % input current (nA)
+r_t = zeros(N, n_steps);   % Firing rate  (hz)
 S = S0;
 
 
 
 for k = 1:n_steps
     % calculate deterministic without noise
-    dSdt = dmf_activity_change(S, C, w_EE(:), p, I_ext(:, k));
+    [dSdt,u,h] = dmf_activity_change(S, C, w_EE(:), p, I_ext(:, k));
+
+    u_t(:, k) = u;
+    r_t(:, k) = h;
+
     
     % calculate stochastic with noise
     eta = randn(N, 1);

@@ -7,8 +7,6 @@
 
 clear; close all; clc;
 
-% DEMO COMMENT FOR GIT
-
 %% 1. Load DMF parameters
 p = dmf_get_params();
 
@@ -36,7 +34,7 @@ for k = 1:numel(scenarios)
 
     rng(k);   % same noise per scenario across runs (reproducible)
     I_ext = make_stimulus(C,t_vec, p);
-    [S_t, t] = simulate_dmf(C, w_EE, p, T, dt, [], I_ext);
+    [S_t, t, u_t,r_t] = simulate_dmf(C, w_EE, p, T, dt, [], I_ext);
 
     results(k).scenario = sc;
     results(k).C        = C;
@@ -44,6 +42,8 @@ for k = 1:numel(scenarios)
     results(k).S_t      = S_t;
     results(k).t        = t;
     results(k).I_ext = I_ext;
+    results(k).u = u_t;
+    results(k).r = r_t;
 
     fprintf('Scenario %s: mean S  V1 = %.3f, V2 = %.3f\n', ...
             sc, mean(S_t(1, :)), mean(S_t(2, :)));
@@ -71,3 +71,20 @@ for k = 1:numel(scenarios)
 end
 
 save('dmf_six_scenarios.mat', 'results', 'p', 'dt', 'T');
+
+%% 7. Plot firing rates H(u)
+figure('Position', [100 100 1000 700]);
+for k = 1:numel(scenarios)
+    subplot(3, 2, k); hold on;
+
+    % shade the stimulus-on blocks
+    yl = [0, max(results(k).r(:)) * 1.1];
+
+    plot(t, results(k).r(1, :), 'b');
+    plot(t, results(k).r(2, :), 'r');
+
+    xlim([0 T]); ylim(yl);
+    title(sprintf('Scenario %s', results(k).scenario));
+    xlabel('Time (s)'); ylabel('Firing rate H(u) (Hz)');
+    if k == 1, legend({'V1', 'V2'}, 'Location', 'northeast'); end
+end

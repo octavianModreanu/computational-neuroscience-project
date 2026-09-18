@@ -1,4 +1,4 @@
-function dS_dt = dmf_activity_change(S, C, w_EE, p, I_ext)
+function [dS_dt, u, h] = dmf_activity_change(S, C, w_EE, p, I_ext)
 % DMF_RHS  Computes dS/dt for the full network (Eq. 22a)
 %
 %   S : (N x 1) current state (synaptic gating variables)
