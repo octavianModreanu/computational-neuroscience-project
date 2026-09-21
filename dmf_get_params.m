@@ -21,7 +21,4 @@ p.sigma    = 0.01;    % std of noise on the input current (nA)
 % --- external stimulus (Wong & Wang 2006; into V1 only) ---
 p.J_ext      = 5.2e-4;   % AMPA coupling of external input (nA/Hz)
 p.mu0        = 30;       % stimulus strength (Hz)
-p.stim_onset = 20;       % stimulus onset (s)
-p.stim_dur   = 2;        % stimulus duration (s)
-
 end

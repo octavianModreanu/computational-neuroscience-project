@@ -10,16 +10,23 @@ clear; close all; clc;
 %% 1. Load DMF parameters
 p = dmf_get_params();
 
-%% 2. Simulation settings
-N  = 2;
-T  = 120;       % total time (s)
-dt = 1e-3;      % integration step (s)
+%% 2. Stimulus and visual-field grid
+setup_stimulus_grid;       % creates A, X, Y, n_frames, T; adds fields to p
+
+%% 3. Simulation settings
+N       = 2;
+dt      = 1e-3;
 n_steps = round(T / dt);
-t_vec = (0:n_steps-1) * dt; %time vector for stimulus (s)
+t_vec   = (0:n_steps-1) * dt;
+S0      = [];
 
-S0 = [];      % use default initial condition (0.1 for all regions)
 
-%% 3. Define structural connectivity (ground truth C)
+%% 4. V1 pRF and stimulus input
+p.prf(1) = struct('x0', 3, 'y0', -2, 'sigma', 1.5, 'n', 1);
+I_ext  = make_stimulus(N, t_vec, p, A, X, Y);
+
+
+%% 5. Define structural connectivity (ground truth C)
 % Replace this with curated connectivity matrix.
 % Here: a small random sparse matrix, just for demonstration.
 
@@ -33,8 +40,7 @@ for k = 1:numel(scenarios)
     [C, w_EE] = make_scenario_connectivity(sc, p);
 
     rng(k);   % same noise per scenario across runs (reproducible)
-    I_ext = make_stimulus(C,t_vec, p);
-    [S_t, t, u_t,r_t] = simulate_dmf(C, w_EE, p, T, dt, [], I_ext);
+    [S_t, t, u_t,r_t] = simulate_dmf(C, w_EE, p, T, dt, S0, I_ext);
 
     results(k).scenario = sc;
     results(k).C        = C;
