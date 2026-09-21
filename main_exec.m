@@ -4,7 +4,7 @@
 %
 % Requires: gilson_dmf_params.m, dmf_activation.m, dmf_input.m,
 %           dmf_rhs.m, simulate_dmf.m  (all in the same folder / path)
-
+% Test push git
 clear; close all; clc;
 
 %% 1. Load DMF parameters
