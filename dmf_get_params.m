@@ -13,7 +13,8 @@ p.G        = 1.0;     % global coupling (was 2.5)
 % --- connectivity profile (used by make_scenario_connectivity.m) ---
 p.g_ff     = 1.0;     % feedforward strength  V1 -> V2
 p.g_fb     = 0.5;     % feedback strength     V2 -> V1
-p.w_EE    = 0.5;     % self-excitation when "lateral" is ON (0 when OFF)
+p.g_lat    = 0.5;     % lateral (within-area) strength
+p.w_EE     = 0.5;     % self-excitation when "lateral" is ON (0 when OFF)
 
 % --- noise ---
 p.sigma    = 0.01;    % std of noise on the input current (nA)

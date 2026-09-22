@@ -3,12 +3,15 @@ function r = pRF_response(A, X, Y, prf)
 %   Returns r : (1 x n_frames), in [0, 1]
 
 
+
+% x0,y0 and sigma are already pre-assigned in main_exec.m --> maybe not
+% mistake?
 %--------------------------------------------------------------------------
 % prf: struct with x0, y0, sigma (deg), n (compressive exponent, 1 = linear)
 %making example pRF struct:
-prf.x0    = 3;      % pRF centre, degrees right of fixation
-prf.y0    = -2;     % pRF centre, degrees below fixation
-prf.sigma = 1.5;    % pRF size, degrees
+% prf.x0    = 3;      % pRF centre, degrees right of fixation
+% prf.y0    = -2;     % pRF centre, degrees below fixation
+% prf.sigma = 1.5;    % pRF size, degrees
 
 %when we scale up this will obviously change, x0,y0 and sigma will be assigned to
 %each node according to something?
