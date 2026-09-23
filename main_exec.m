@@ -19,7 +19,7 @@ area = [ones(1, n1), 2*ones(1, n2)];
 N    = numel(area);
 iV1 = find(area == 1, 1);
 iV2 = find(area == 2, 1);
-dt      = 1e-3;
+dt      = 1;
 n_steps = round(T / dt);
 t_vec   = (0:n_steps-1) * dt;
 S0      = [];
