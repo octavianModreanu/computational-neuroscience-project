@@ -26,9 +26,10 @@ S0      = [];
 
 
 %% 4. V1 pRF and stimulus input
-p.prf(1) = struct('x0', 3, 'y0', -2, 'sigma', 1.5, 'n', 1);
-I_ext  = make_stimulus(N, t_vec, p, A, X, Y);
+prf = define_v1_retinotopy(5, 4, 10, 10, 1.5, 1);   % 40 V1 voxels, uniform sigma = 1.5 deg
+p.prf = prf;
 
+I_ext  = make_stimulus(N, t_vec, p, A, X, Y);
 
 %% 5. Define structural connectivity (ground truth C)
 % Replace this with curated connectivity matrix.
