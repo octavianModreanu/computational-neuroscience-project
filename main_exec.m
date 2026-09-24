@@ -4,7 +4,7 @@
 %
 % Requires: gilson_dmf_params.m, dmf_activation.m, dmf_input.m,
 %           dmf_rhs.m, simulate_dmf.m  (all in the same folder / path)
-% Test push git
+
 clear; close all; clc;
 
 %% 1. Load DMF parameters
@@ -17,8 +17,8 @@ setup_stimulus_grid;       % creates A, X, Y, n_frames, T; adds fields to p
 n1 = 20;  n2 = 20;
 area = [ones(1, n1), 2*ones(1, n2)];
 N    = numel(area);
-iV1 = find(area == 1, 1);
-iV2 = find(area == 2, 1);
+iV1 = find(area == 1, 1); % this is always 1
+iV2 = find(area == 2, 1); % this is always n1 + 1
 dt      = 1;
 n_steps = round(T / dt);
 t_vec   = (0:n_steps-1) * dt;
@@ -26,8 +26,15 @@ S0      = [];
 
 
 %% 4. V1 pRF and stimulus input
-prf = define_v1_retinotopy(5, 4, 10, 10, 1.5, 1);   % 40 V1 voxels, uniform sigma = 1.5 deg
-p.prf = prf;
+% using the smallest grid that fits n1 points
+n1_x = ceil(sqrt(n1));
+n1_y = ceil(n1/n1_x);
+
+prf = define_v1_retinotopy(n1_x, n1_y, 10, 10, 1.5, 1);   % n1 voxels, uniform sigma = 1.5 deg
+% here to handle cases where n1 doesn't factor cleanly, randomizes gaps in
+% the grid rather than having all of them in one spot (at the end)
+keep = sort(randperm(n1_x * n1_y, n1));
+p.prf = prf(keep);
 
 I_ext  = make_stimulus(N, t_vec, p, A, X, Y);
 
