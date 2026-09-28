@@ -38,6 +38,7 @@ for v = 1:n_v1
     % Overlap between the bar and this voxel's pRF on every frame, in
     % [0, 1]: 0 = bar misses the pRF, 1 = bar covers all of it
     r = pRF_response(A, X, Y, p.prf(v));        % 1 x n_frames
+    r = r / max(r);
 
     I_ext(v, :) = p.J_ext * p.mu0 * r(idx);
 end

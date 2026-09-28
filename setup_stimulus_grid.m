@@ -11,11 +11,6 @@
 load('stimulus.mat');                  % stimulus: 22500 x 304 (pixels x frames)
 
 
-p.n_px       = 150;                    % image is 150 x 150 pixels
-p.fov_radius = 10;                     % half-width of the visual field in degrees,
-% so the image spans -10 to +10 deg.
-p.frame_dt   = 2;                      % seconds per frame = TR of the scan
-
 R = p.fov_radius;
 
 
