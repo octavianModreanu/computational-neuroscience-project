@@ -13,11 +13,11 @@ p.G        = 1.0;     % global coupling (was 2.5)
 % --- connectivity profile (used by make_scenario_connectivity.m) ---
 p.g_ff     = 0.7;     % feedforward strength  V1 -> V2 (originally 1.0)
 p.g_fb     = 0.4;     % feedback strength     V2 -> V1 (originally 0.5)
-p.g_lat    = 0.5;     % lateral (within-area) strength 
-p.w_EE     = 0.3;     % self-excitation when "lateral" is ON (0 when OFF) (originally 0.5)
-p.s_ff = 4; % sampling extent ff
-p.s_fb = 5; % sampling extent fb
-p.s_lat = 4; % sampling extend lat
+p.g_lat    = 0.1;     % lateral (within-area) strength 
+p.w_EE     = 0.35;     % self-excitation when "lateral" is ON (0 when OFF) (originally 0.5)
+p.s_ff = 2; % sampling extent ff
+p.s_fb = 3; % sampling extent fb
+p.s_lat = 1; % sampling extend lat
 
 % --- noise ---
 p.sigma    = 0.01;    % std of noise on the input current (nA)
@@ -31,5 +31,5 @@ p.frame_dt   = 2;                      % seconds per frame = TR of the scan
 
 % --- external stimulus (Wong & Wang 2006; into V1 only) ---
 p.J_ext      = 5.2e-4;   % AMPA coupling of external input (nA/Hz)
-p.mu0        = 60;       % stimulus strength (Hz)
+p.mu0        = 80;       % stimulus strength (Hz)
 end
