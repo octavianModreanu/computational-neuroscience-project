@@ -3,9 +3,6 @@ function r = pRF_response(A, X, Y, prf)
 %   Returns r : (1 x n_frames), in [0, 1]
 
 
-
-% x0,y0 and sigma are already pre-assigned in main_exec.m --> maybe not
-% mistake?
 %--------------------------------------------------------------------------
 % prf: struct with x0, y0, sigma (deg), n (compressive exponent, 1 = linear)
 %making example pRF struct:

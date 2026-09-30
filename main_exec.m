@@ -19,7 +19,7 @@ area = [ones(1, n1), 2*ones(1, n2)];
 N    = numel(area);
 iV1 = find(area == 1, 1); % this is always 1
 iV2 = find(area == 2, 1); % this is always n1 + 1
-dt      = 1;
+dt      = 5e-03;
 n_steps = round(T / dt);
 t_vec   = (0:n_steps-1) * dt;
 S0      = [];
@@ -39,17 +39,18 @@ p.prf = prf(keep);
 I_ext  = make_stimulus(N, t_vec, p, A, X, Y);
 
 %% 5. Define structural connectivity (ground truth C)
-% Replace this with curated connectivity matrix.
-% Here: a small random sparse matrix, just for demonstration.
 
 % Running each scenario from the phd paper in the order found in figure 3.1
 % Each scenario and the connectivity mtx is set up in make_scenario_connectivity
 scenarios = {'A', 'B', 'C', 'D', 'E', 'F'};
 results = struct();
 
+rng(0);
+anchor = randperm(n1,n2);
+
 for k = 1:numel(scenarios)
     sc = scenarios{k};
-    [C, w_EE] = make_scenario_connectivity(sc, area, p);
+    [C, w_EE] = make_scenario_connectivity(sc, area, p, n1, n2, N, anchor);
 
     rng(k);   % same noise per scenario across runs (reproducible)
     [S_t, t, u_t,r_t] = simulate_dmf(C, w_EE, p, T, dt, S0, I_ext);
@@ -93,6 +94,7 @@ end
 save('dmf_six_scenarios.mat', 'results', 'p', 'dt', 'T');
 
 %% 7. Plot firing rates H(u)
+% This is just for one node in V1 and one node in V2
 figure('Position', [100 100 1000 700]);
 for k = 1:numel(scenarios)
     subplot(3, 2, k); hold on;
@@ -107,4 +109,22 @@ for k = 1:numel(scenarios)
     title(sprintf('Scenario %s', results(k).scenario));
     xlabel('Time (s)'); ylabel('Firing rate H(u) (Hz)');
     if k == 1, legend({'V1', 'V2'}, 'Location', 'northeast'); end
+end
+
+%% 8. Plot firing rates for every node (heatmap)
+figure('Position', [100 100 1000 700]);
+for k = 1:numel(scenarios)
+    subplot(3, 2, k);
+    imagesc(t, 1:N, results(k).r);
+    set(gca, 'YDir', 'normal');
+    colormap(gca, 'hot');
+    cb = colorbar;
+    cb.Label.String = 'Firing rate H(u) (Hz)';
+
+    hold on;
+    yline(n1 + 0.5, 'c-', 'LineWidth', 1.5);   % V1/V2 boundary
+
+    xlim([0 T]);
+    title(sprintf('Scenario %s', results(k).scenario));
+    xlabel('Time (s)'); ylabel('Node index');
 end
