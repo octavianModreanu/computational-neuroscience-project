@@ -20,7 +20,7 @@ R = p.fov_radius;
 %   y runs top to bottom  (+R at row 1,    -R at row 150)
 [X, Y] = meshgrid(linspace(-R, R, p.n_px),linspace( R, -R, p.n_px));     
 
-A        = stimulus;                             
-n_frames = size(A, 2);                           % 304
-frame_t  = (0:n_frames-1) * p.frame_dt;          % 0, 2, 4, ... 606 s
-T        = n_frames * p.frame_dt;                % total run length: 608 s
+A        = stimulus(:,1:100);                             
+n_frames = size(A, 2);                           % 100
+frame_t  = (0:n_frames-1) * p.frame_dt;          % 0, 2, 4, ... 200 s
+T        = n_frames * p.frame_dt;                % total run length: 200 s
