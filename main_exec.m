@@ -2,8 +2,12 @@
 %
 % Example driver for the Gilson/Deco DMF model
 %
-% Requires: gilson_dmf_params.m, dmf_activation.m, dmf_input.m,
-%           dmf_rhs.m, simulate_dmf.m  (all in the same folder / path)
+% Requires: dmf_get_params.m, setup_stimulus_grid.m, stimulus.mat,
+%           define_V1_retinotopy.m, make_stimulus.m,
+%           make_scenario_connectivity.m, pRF_response.m 
+%           dmf_activation.m, dmf_input.m,
+%           dmf_activity_change.m,
+%           simulate_dmf.m  (all in the same folder / path)
 
 clear; close all; clc;
 
@@ -19,7 +23,7 @@ area = [ones(1, n1), 2*ones(1, n2)];
 N    = numel(area);
 iV1 = find(area == 1, 1); % this is always 1
 iV2 = find(area == 2, 1); % this is always n1 + 1
-dt      = 5e-03;
+dt      = 1e-2;
 n_steps = round(T / dt);
 t_vec   = (0:n_steps-1) * dt;
 S0      = [];
@@ -30,7 +34,19 @@ S0      = [];
 n1_x = ceil(sqrt(n1));
 n1_y = ceil(n1/n1_x);
 
-prf = define_v1_retinotopy(n1_x, n1_y, 10, 10, 1.5, 1);   % n1 voxels, uniform sigma = 1.5 deg
+
+
+prf = define_v1_retinotopy(n1_x, n1_y, p.fov_radius,p.fov_radius, 1.5, 1);   % n1 voxels, uniform sigma = 1.5 deg
+
+
+%added visualization of the pRFs
+G = zeros(size(X));
+for v = 1:numel(prf)
+    g = exp(-((X-prf(v).x0).^2 + (Y-prf(v).y0).^2)/(2*prf(v).sigma^2));
+    G = G + g;
+end
+imagesc(X(1,:), Y(:,1), G); axis xy equal tight; colorbar
+
 % here to handle cases where n1 doesn't factor cleanly, randomizes gaps in
 % the grid rather than having all of them in one spot (at the end)
 keep = sort(randperm(n1_x * n1_y, n1));
