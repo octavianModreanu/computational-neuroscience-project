@@ -117,7 +117,7 @@ for k = 1:numel(scenarios)
     if k == 1, legend({'V1', 'V2'}, 'Location', 'northeast'); end
 end
 
-save('dmf_six_scenarios.mat', 'results', 'p', 'dt', 'T');
+%save('dmf_six_scenarios.mat', 'results', 'p', 'dt', 'T');
 
 %% 7. Plot firing rates H(u)
 % This is just for one node in V1 and one node in V2
