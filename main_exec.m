@@ -18,7 +18,7 @@ p = dmf_get_params();
 setup_stimulus_grid;       % creates A, X, Y, n_frames, T; adds fields to p
 
 %% 3. Simulation settings
-n1 = 60;  n2 = 30;
+n1 = 100;  n2 = 50;
 area = [ones(1, n1), 2*ones(1, n2)];
 N    = numel(area);
 iV1 = find(area == 1, 1); % this is always 1
@@ -41,8 +41,8 @@ prf = define_v1_retinotopy(n1_x, n1_y, p.fov_radius,p.fov_radius, 1.5, 1);   % n
 
 % here to handle cases where n1 doesn't factor cleanly, randomizes gaps in
 % the grid rather than having all of them in one spot (at the end)
-keep = sort(randperm(n1_x * n1_y, n1));
-p.prf = prf(keep);
+%keep = sort(randperm(n1_x * n1_y, n1));
+p.prf = prf;
 
 
 % Visualize kept V1 pRFs, labeled by node index
