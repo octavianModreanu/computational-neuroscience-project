@@ -18,7 +18,7 @@ p = dmf_get_params();
 setup_stimulus_grid;       % creates A, X, Y, n_frames, T; adds fields to p
 
 %% 3. Simulation settings
-n1 = 20;  n2 = 20;
+n1 = 60;  n2 = 30;
 area = [ones(1, n1), 2*ones(1, n2)];
 N    = numel(area);
 iV1 = find(area == 1, 1); % this is always 1
@@ -39,18 +39,28 @@ n1_y = ceil(n1/n1_x);
 prf = define_v1_retinotopy(n1_x, n1_y, p.fov_radius,p.fov_radius, 1.5, 1);   % n1 voxels, uniform sigma = 1.5 deg
 
 
-%added visualization of the pRFs
-G = zeros(size(X));
-for v = 1:numel(prf)
-    g = exp(-((X-prf(v).x0).^2 + (Y-prf(v).y0).^2)/(2*prf(v).sigma^2));
-    G = G + g;
-end
-imagesc(X(1,:), Y(:,1), G); axis xy equal tight; colorbar
-
 % here to handle cases where n1 doesn't factor cleanly, randomizes gaps in
 % the grid rather than having all of them in one spot (at the end)
 keep = sort(randperm(n1_x * n1_y, n1));
 p.prf = prf(keep);
+
+
+% Visualize kept V1 pRFs, labeled by node index
+G = zeros(size(X));
+for v = 1:n1
+    G = G + exp(-((X-p.prf(v).x0).^2 + (Y-p.prf(v).y0).^2)/(2*p.prf(v).sigma^2));
+end
+figure; imagesc(X(1,:), Y(:,1), G); axis xy equal tight; colorbar; hold on
+th = linspace(0, 2*pi, 100);
+for v = 1:n1
+    x0 = p.prf(v).x0;  y0 = p.prf(v).y0;  s = p.prf(v).sigma;
+    plot(x0 + s*cos(th), y0 + s*sin(th), 'w-');          % 1-sigma outline
+    plot(x0, y0, 'w.', 'MarkerSize', 8);                 % centre
+    text(x0, y0 + 0.5, sprintf('%d', v), 'Color', 'k', ...
+        'BackgroundColor', [1 1 1 0.7], 'Margin', 1, ...
+        'HorizontalAlignment', 'center', 'FontWeight', 'bold');
+end
+xlabel('x (deg)'); ylabel('y (deg)'); title('V1 pRFs (label = node index)');
 
 I_ext  = make_stimulus(N, t_vec, p, A, X, Y);
 
