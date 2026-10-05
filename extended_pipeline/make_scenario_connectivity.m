@@ -57,7 +57,8 @@ for a = 1:2
     end
 end
 
-%w_EE is the self-excitation weight
-w_EE = p.w_EE * ones(N, 1);
+% w_EE_on is the self-excitation weight
+lateral_on = diag(Mflag);   % 1 if node's own scenario turns lateral ON
+w_EE = p.w_EE_on * lateral_on(area);
 
 end
