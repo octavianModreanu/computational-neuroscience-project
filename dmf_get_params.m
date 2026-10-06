@@ -32,4 +32,10 @@ p.frame_dt   = 2;                      % seconds per frame = TR of the scan
 % --- external stimulus (Wong & Wang 2006; into V1 only) ---
 p.J_ext      = 5.2e-4;   % AMPA coupling of external input (nA/Hz)
 p.mu0        = 80;       % stimulus strength (Hz)
+
+% --- aDMDc ---
+p.n_drop      = 5;       % BOLD frames dropped at the start (Balloon-Windkessel transient)
+p.stim_lag    = 'hrf';   % 'hrf' = two-gamma HRF, or integer = shift in TRs
+p.dmd_rank    = 50;      % rank for pRFs (F); [] = SVHT
+p.dmd_rank_cf = 10;      % rank for connective fields (A)
 end

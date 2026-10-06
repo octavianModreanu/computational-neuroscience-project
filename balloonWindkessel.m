@@ -23,9 +23,13 @@ function B = balloonWindkessel(S, t)
     % s = 0, f = 1, v = 1, q = 1
     y0 = [0; 1; 1; 1];
 
+    % Interpolant of S(t), built once here (rebuilding it inside the ODE
+    % on every ode45 call is very slow for long signals)
+    S_of_t = griddedInterpolant(t(:), S(:), 'linear', 'nearest');
+
     % Define the ODE system
     model = @(tCurrent, y) balloonWindkesselODE( ...
-        tCurrent, y, t, S, ...
+        tCurrent, y, S_of_t, ...
         kappa, gamma, tau_H, alpha, rho);
 
     % Solve the differential equations
@@ -45,7 +49,7 @@ end
 
 
 function dydt = balloonWindkesselODE( ...
-    tCurrent, y, tInput, S, ...
+    tCurrent, y, S_of_t, ...
     kappa, gamma, tau_H, alpha, rho)
 
     % State variables
@@ -55,7 +59,7 @@ function dydt = balloonWindkesselODE( ...
     q = y(4);   % normalized deoxyhemoglobin content
 
     % Find S at the current time requested by ode45
-    neuralInput = interp1(tInput, S, tCurrent, 'linear', 0);
+    neuralInput = S_of_t(tCurrent);
 
     % Equation 23a
     dsdt = neuralInput ...

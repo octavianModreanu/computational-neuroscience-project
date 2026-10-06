@@ -3,7 +3,9 @@ function I_ext = make_stimulus(N, t_vec, p, A, X, Y)
 % through each V1 voxel's population receptive field (pRF).
 %
 %   N     : number of nodes
-%   t_vec : (1 x n_steps) simulation time vector (s)
+%   t_vec : time vector (s): either the simulation steps (1 x n_steps) or
+%           one entry per frame (frame_t, 1 x n_frames); simulate_dmf
+%           accepts both
 %   p     : parameter struct; needs J_ext, mu0, frame_dt, and prf, a
 %           1 x n_v1 struct array (one entry per V1 voxel) with fields
 %           x0, y0, sigma (deg) and n (exponent, 1 = linear) -- as
@@ -38,7 +40,7 @@ for v = 1:n_v1
     % Overlap between the bar and this voxel's pRF on every frame, in
     % [0, 1]: 0 = bar misses the pRF, 1 = bar covers all of it
     r = pRF_response(A, X, Y, p.prf(v));        % 1 x n_frames
-    r = r / max(r);
+    r = r/max(r);
 
     I_ext(v, :) = p.J_ext * p.mu0 * r(idx);
 end

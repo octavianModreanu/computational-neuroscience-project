@@ -1,4 +1,4 @@
-function [C, w_EE] = make_scenario_connectivity(scenario, area, p, n1, n2, N, anchor)
+function [C, w_EE, W] = make_scenario_connectivity(scenario, p, n1, n2, N, anchor)
 % MAKE_SCENARIO_CONNECTIVITY  Ground-truth connectivity for scenarios A-F
 %
 %   Two nodes: node 1 = V1 (lower area), node 2 = V2 (higher area)
@@ -10,6 +10,10 @@ function [C, w_EE] = make_scenario_connectivity(scenario, area, p, n1, n2, N, an
 %
 %   scenario : 'A' ... 'F'
 %   p        : parameter struct (needs g_ff, g_fb, w_lat)
+%
+%   W        : unscaled weight matrices (ground-truth CFs, used for scoring)
+%              W.ff (n2 x n1), W.fb (n1 x n2), W.lat_v1 (n1 x n1),
+%              W.lat_v2 (n2 x n2), W.flags (= Mflag), W.prf_pos_v2 (n2 x 2)
 %
 %   Scenario   feedforward  feedback  lateral V1  lateral V2
 %      A           x           x
@@ -125,3 +129,11 @@ C(i2,i1) = Mflag(2,1) * Gain(2,1) * W_ff;
 C(i2,i2) = Mflag(2,2) * Gain(2,2) * W_lat_v2;
 
 w_EE = p.w_EE * ones(N,1);
+
+%% Unscaled weights and flags (ground truth for scoring)
+W.ff         = W_ff;
+W.fb         = W_fb;
+W.lat_v1     = W_lat_v1;
+W.lat_v2     = W_lat_v2;
+W.flags      = Mflag;
+W.prf_pos_v2 = prf_pos_v2;
